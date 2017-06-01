@@ -7,13 +7,14 @@ def get_requirements():
 
 setup(
     name='schemalib',
-    version='1.0',
+    version='1.0.1',
     packages=find_packages(),
     install_requires=get_requirements(),
     include_package_data=True,
     author='Pavel Odvody',
     author_email='podvody@redhat.com',
     description='Library for working with JSON Schemas',
+    long_description=open('README.md').read(),
     license='GPLv-3',
     keywords='lib',
     url='https://github.com/shaded-enmity/schemalib'
