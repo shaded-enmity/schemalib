@@ -9,6 +9,16 @@ PKG_PREFIX = 'package://'
 SCHEMA_SUFFIX = '.json'
 
 
+def _get_positional_args(func):
+    """
+
+    :param func:
+    :return:
+    """
+    code = func.__code__
+    return list(code.co_varnames[:code.co_argcount])
+
+
 class SchemaArgumentError(Exception):
     pass
 
@@ -49,7 +59,7 @@ class SchemaLibrary(dict):
         """
 
         self._base_paths = list(base_paths)
-        super().__init__()
+        #super().__init__()
 
     def load_schema(self, name):
         """Load schema specified by name, searching `base_paths` sequentially
@@ -93,6 +103,7 @@ class SchemaLibrary(dict):
             self[item] = schema
         return super(SchemaLibrary, self).__getitem__(item)
 
+
     def check(self, *args, **kwargs):
         """ Function decorator that allows for return value and keyword parameter schema validation """
 
@@ -101,10 +112,15 @@ class SchemaLibrary(dict):
 
         def wrapped(f):
             def inner(*iargs, **ikwargs):
+                positional = _get_positional_args(f)
                 for k, v in schemas.items():
-                    if k not in ikwargs:
+                    if k in ikwargs:
+                        self[v].check(ikwargs[k])
+                    elif k in positional:
+                        idx = positional.index(k)
+                        self[v].check(iargs[idx])
+                    else:
                         raise SchemaArgumentError('Argument does not exist: {}'.format(k))
-                    self[v].check(ikwargs[k])
                 v = f(*iargs, **ikwargs)
                 if schema:
                     self[schema].check(v)
