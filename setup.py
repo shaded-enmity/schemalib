@@ -16,4 +16,5 @@ setup(
     description='Library for working with JSON Schemas',
     license='GPLv-3',
     keywords='lib',
+    url='https://github.com/shaded-enmity/schemalib'
 )
