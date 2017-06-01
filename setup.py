@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     author='Pavel Odvody',
     author_email='podvody@redhat.com',
-    description='Library for simple working with JSON Schemas',
-    license='MIT',
+    description='Library for working with JSON Schemas',
+    license='GPLv-3',
     keywords='lib',
 )
