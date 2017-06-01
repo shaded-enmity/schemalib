@@ -1,0 +1,14 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"definitions": {},
+	"id": "http://test-schema/",
+	"properties": {
+	    "test": {
+		"id": "/properties/test",
+		"type": "integer"
+	    }
+	},
+        "required": ["test"],
+	"type": "object"
+}
+
