@@ -8,7 +8,7 @@ order applies here).
 
 ## Examples:
 
-```
+```python
 from schemalib import SchemaLibrary
 schemas = SchemaLibrary('/my/schema/path', 'package://my.python.package')
 
