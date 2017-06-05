@@ -10,9 +10,9 @@ SCHEMA_SUFFIX = '.json'
 
 
 def _get_positional_args(func):
-    """
+    """Get positional argument names for given function
 
-    :param func:
+    :param func: function to inspect
     :return:
     """
     code = func.__code__
@@ -59,7 +59,7 @@ class SchemaLibrary(dict):
         """
 
         self._base_paths = list(base_paths)
-        #super().__init__()
+        super(SchemaLibrary, self).__init__()
 
     def load_schema(self, name):
         """Load schema specified by name, searching `base_paths` sequentially
@@ -68,7 +68,7 @@ class SchemaLibrary(dict):
         :type name: str
         :return: schema contents as string
         :rtype: str
-        :raises: schemalib.SchemaNotFoundError when the schema couldn't be found
+        :raises: schemalib.SchemaNotFoundError when the schema couldn't be found or was empty
         """
 
         for p in self._base_paths:
@@ -85,7 +85,9 @@ class SchemaLibrary(dict):
                 lookup = path.join(p, name) + SCHEMA_SUFFIX
                 if path.exists(lookup):
                     with open(lookup, 'r') as f:
-                        return f.read()
+                        data = f.read()
+                        if data:
+                            return data
 
         raise SchemaNotFoundError(name)
 
@@ -107,7 +109,9 @@ class SchemaLibrary(dict):
     def check(self, *args, **kwargs):
         """ Function decorator that allows for return value and keyword parameter schema validation """
 
-        schema = args[0] if len(args) > 0 else None
+        assert len(args) < 2, 'Cannot validate multiple return schemas'
+
+        return_schema = args[0] if len(args) > 0 else None
         schemas = dict(kwargs)
 
         def wrapped(f):
@@ -122,8 +126,9 @@ class SchemaLibrary(dict):
                     else:
                         raise SchemaArgumentError('Argument does not exist: {}'.format(k))
                 v = f(*iargs, **ikwargs)
-                if schema:
-                    self[schema].check(v)
+                if return_schema:
+                    self[return_schema].check(v)
                 return v
             return inner
         return wrapped
+
