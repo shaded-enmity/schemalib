@@ -16,6 +16,17 @@ def test_single_kwarg():
         pass
     single(kwarg={'test': 1})
 
+def test_single_unknown():
+    @schemas.check(not_there='test-schema-1.0.0')
+    def single(kwarg):
+        pass
+    try:
+        single({'test': 1})
+    except schemalib.SchemaArgumentError as e:
+        assert (e.message == "Argument does not exist: not_there")
+        return 
+    assert False, 'Should not get here'
+
 def test_single_kwarg_bad_schema():
     @schemas.check(kwarg='test-schema-1.0.0')
     def single(kwarg=None):
