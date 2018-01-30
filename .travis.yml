@@ -6,7 +6,7 @@ python:
   - 2.7
 
 script:
-  - pip install -e requirements-dev.txt
+  - pip install -r requirements-dev.txt && python setup.py install
   - nosetests -w tests --with-coverage
 
 after_success:
